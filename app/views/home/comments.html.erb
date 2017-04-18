@@ -1,0 +1,10 @@
+<div post-id="<%= params[:id] %>" class="comments">
+  <%= render partial: 'comment' %>
+  <%= form_for Comment.new, url: {action: "add_comment"}, html: {id: "comment_form" + params[:id], class: "ui form" + (@comments.count.zero? ? "" : " reply") }, remote: true do |f| %>
+    <%= f.hidden_field :post_id, value: params[:id] %>
+    <%= f.hidden_field :user_id, value: @user.id if @user %>
+    <%= f.text_field :content, id: "comment_field" + params[:id], placeholder: "Type Anything...", required: "required", :autocomplete => :off, disabled: !@user %>
+    <%= f.submit style: "display: none" %>
+    <div class="ui fitted clearing hidden divider"></div>
+  <% end %>
+</div>

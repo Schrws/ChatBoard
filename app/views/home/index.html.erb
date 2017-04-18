@@ -1,0 +1,76 @@
+<script>
+$(document).ready(function() {
+  autosize($('textarea'));
+  $(document).on('click', '.load', function() {
+    id = $(this).parents('.comment').attr('post-id');
+    post = $('.comment[post-id=' + id + ']');
+    if (post.find('.ui.form').length) return;
+    $.ajax({
+      url: "/home/comments?id=" + id,
+      success: function (data) {
+        if (post.find('.ui.form').length) return;
+        post.append(data);
+      }
+    });
+  });
+  $(document).on('click', '.delete', function() {
+    parent = $(this).parents('.comment');
+    id = parent.attr('comment-id') ? parent.attr('comment-id') : parent.attr('post-id');
+    type = parent.attr('comment-id') ? "comment" : "post";
+    $('.ui.basic.modal').modal({
+      onApprove: function() {
+        $.ajax({
+          url: "/home/" + type + "/delete?id=" + id
+        });
+      }
+    }).modal('show');
+  });
+});
+</script>
+<style type="text/css">
+.comments {
+  margin-bottom: 0px !important;
+  padding-bottom: 0px !important;
+}
+.delete {
+  cursor: pointer;
+}
+</style>
+<div class="ui small basic modal">
+  <div class="ui icon header">
+    <i class="warning sign icon"></i>
+    Warning
+  </div>
+  <div class="content">
+    <p>This action cannot be reversed. Are you sure you want to proceed?</p>
+  </div>
+  <div class="actions">
+    <div class="ui red basic cancel inverted button">
+      <i class="remove icon"></i>
+      No
+    </div>
+    <div class="ui green ok inverted button">
+      <i class="checkmark icon"></i>
+      Yes
+    </div>
+  </div>
+</div>
+<div class="ui basic segment" style="margin: 0 auto; max-width: 720px;">
+  <div class="ui clearing segment">
+    <h3 class="ui dividing header">Hi, <%= @user ? @user.name.capitalize : "Visitor" %>! <a href="<%= @user ? "/logout" : "/login" %>"><%= @user ? "logout" : "login" %></a></h3>
+    <%= form_for Post.new, url: {action: "add_post"}, html: {class: "ui form"}, remote: true do |f| %>
+      <div class="field">
+        <%= f.hidden_field :user_id, value: @user.id if @user %>
+        <%= f.text_area :content, id: "post_field", placeholder: "Type Anything...", rows: 1, required: "required", disabled: !@user %>
+      </div>
+      <%= button_tag type: "submit", class: "ui blue labeled right floated #{"disabled" if !@user} icon button" do %>
+        <i class="icon edit"></i> Add Post
+      <% end %>
+      <div class="ui fitted clearing hidden divider"></div>
+    <% end %>
+  </div>
+  <h3 class="ui dividing header">Posts</h3>
+  <div id="posts" class="ui comments" style="max-width: none;">
+    <%= render partial: 'post' %>
+  </div>
+</div>
