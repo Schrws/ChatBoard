@@ -1,0 +1,23 @@
+<% @posts.reverse_each do |post| %>
+<div class="ui segment">
+  <div post-id="<%= post.id %>" class="comment">
+    <a class="avatar">
+      <img src="<%= image_url "icon/#{@user_list[post.user_id].downcase}.jpg" %>">
+    </a>
+    <div class="content">
+      <a class="author"><%= @user_list[post.user_id] %></a>
+      <span class="id">#<%= post.id %></span>
+      <div class="metadata">
+        <span class="date"><%= post.created_at %></span>
+        <% if !@user.nil? && @user.id == post.user_id %><a class="delete">Delete</a><% end %>
+      </div>
+      <div class="text">
+        <%= simple_format post.content %>
+      </div>
+      <div class="actions">
+        <a post-id="<%= post.id %>" class="load"><%= post.comment_count > 0 ? pluralize(post.comment_count, "Comment") : "Add Comment" %></a>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>

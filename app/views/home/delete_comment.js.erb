@@ -1,0 +1,3 @@
+$('.comment[comment-id=<%= params[:id] %>]').remove();
+if (!$('.comments[post-id=<%= @post_id %>] > div').length) $('#comment_form<%= @post_id %>').removeClass('reply');
+$('.load[post-id=<%= @post_id %>]').text('<%= @count > 0 ? pluralize(@count, "Comment") : "Add Comment" %>');

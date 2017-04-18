@@ -1,0 +1,4 @@
+$('#comment_form<%= params[:comment][:post_id] %>').before('<%= escape_javascript(render 'comment') %>');
+$('#comment_form<%= params[:comment][:post_id] %>').addClass('reply');
+$('#comment_field<%= params[:comment][:post_id] %>').val('');
+$('.load[post-id=<%= params[:comment][:post_id] %>]').text('<%= pluralize(@count, "Comment") %>');

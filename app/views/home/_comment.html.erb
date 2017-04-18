@@ -1,0 +1,17 @@
+<% @comments.each do |comment| %>
+<div comment-id="<%= comment.id %>" class="comment">
+  <a class="avatar">
+    <img src="<%= image_url "icon/#{@user_list[comment.user_id].downcase}.jpg" %>">
+  </a>
+  <div class="content">
+    <a class="author"><%= @user_list[comment.user_id] %></a>
+    <div class="metadata">
+      <span class="date"><%= comment.updated_at %></span>
+      <% if !@user.nil? && @user.id == comment.user_id %><a comment-id="<%= comment.id %>" class="delete">Delete</a><% end %>
+    </div>
+    <div class="text">
+      <%= comment.content %>
+    </div>
+  </div>
+</div>
+<% end unless @comments.nil? or @comments.empty? %>
